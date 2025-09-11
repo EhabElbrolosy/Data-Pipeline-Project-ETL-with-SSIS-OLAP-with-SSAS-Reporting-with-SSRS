@@ -50,5 +50,41 @@ BEGIN
 	FROM [sales_2017].[dbo].[Staging_Area_Combined_Data] S
 	join  [Supply_Chain_Datawarhouse].[dbo].[Dim_Category] C
 	ON S.[Product Category Id] = C.Category_ID
+END;
+
+--Dim_Product
+ قابلني فيه مشكلة مش فاهمها :
+كان بيعمل insert duplicated values في ال product_id نتيجة استخدام الjoin ف حليتها باستخدام row_number شلت الduplicates الاول
+---------------------------------------------------------------------------------------------------
+
+CREATE PROCEDURE Load_To_Dim_Product as
+BEGIN 
+	WITH CTE AS (
+		select
+			s.[Product Id],
+			s.[Product Name],
+			s.[Product Description],
+			s.[Product Price],
+			s.[Product Status],
+			s.[Category Id],
+			ROW_NUMBER() over (partition by s.[Product Id] order by s.[Product Id]) as total
+		FROM [sales_2017].[dbo].[Staging_Area_Combined_Data] S
+		join [Supply_Chain_Datawarhouse].[dbo].[Dim_Category] C
+		ON S.[Category Id] = C.Category_ID
+	)
+	insert into [Supply_Chain_Datawarhouse].[dbo].[DIM_Product]
+	(Product_ID, Product_Name, Product_Description, Product_Price, Product_Status, Category_ID
+	)
+	select
+		[Product Id],
+		[Product Name],
+		[Product Description],
+		[Product Price],
+		[Product Status],
+		[Category Id]
+	FROM CTE where total =1
 END
+
 ```
+
+
