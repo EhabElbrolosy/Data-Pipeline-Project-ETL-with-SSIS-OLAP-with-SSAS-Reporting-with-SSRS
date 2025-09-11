@@ -75,6 +75,49 @@ BEGIN
 	select Distinct [Shipping Mode], [delivery status]
 	FROM [sales_2017].[dbo].[Staging_Area_Combined_Data]
 END
+
+
+CREATE PROCEDURE  Load_To_Fact_Order_Items as 
+BEGIN
+	INSERT INTO [Supply_Chain_Datawarhouse].[dbo].[Fact_Order_Items]
+		(
+		Order_ID,
+		Customer_ID,
+		Shipping_ID,
+		Category_ID,
+		Benefit_Per_Order,
+		[Days_For_Shipping_(Real)], 
+		[Days_For_Shipping_(Scheduled)],
+		Sales_Per_Customer,
+		Late_Delivery_Risk,
+		Order_Item_Discount,
+		Order_Item_Discount_Rate,
+		Order_Item_Product_Price,
+		Order_Item_Profit_Ratio,
+		Sales,
+		Order_Item_Total,
+		Order_Profit_Per_Order,
+		)
+	SELECT 
+		ORD.Order_ID,
+		CUS.Customer_ID,
+		SHI.Shipping_ID,
+		CAT.Category_ID,
+		STG.Benefit_Per_Order,
+		STG.[Days_For_Shipping_(Real)], 
+		STG.[Days_For_Shipping_(Scheduled)],
+		STG.Sales_Per_Customer,
+		STG.Late_Delivery_Risk,
+		STG.Order_Item_Discount,
+		STG.Order_Item_Discount_Rate,
+		STG.Order_Item_Product_Price,
+		STG.Order_Item_Profit_Ratio,
+		STG.Sales,
+		STG.Order_Item_Total,
+		STG.Order_Profit_Per_Order
+	FROM [sales_2017].[dbo].[Staging_Area_Combined_Data] as STG
+	JOIN [Supply_Chain_Datawarhouse].[dbo].[DIM_Orders] as ORD
+		 ON STG.[Order id] = ORD.Order_ID
 ```
 
 
