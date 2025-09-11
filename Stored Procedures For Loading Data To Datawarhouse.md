@@ -35,24 +35,6 @@ BEGIN
 END
 
 --Dim_Product
---------------------------------------------------------------------------------------------------------------------------------------
-
-CREATE PROCEDURE Load_To_Dim_Product as
-BEGIN 
-	insert into [Supply_Chain_Datawarhouse].[dbo].[DIM_Product]
-	select distinct
-	[Product Id],
-	[Product Category Id],
-	[Product Description],
-	[Product Name],
-	[Product Price],
-    [Product Status]
-	FROM [sales_2017].[dbo].[Staging_Area_Combined_Data] S
-	join  [Supply_Chain_Datawarhouse].[dbo].[Dim_Category] C
-	ON S.[Product Category Id] = C.Category_ID
-END;
-
---Dim_Product
  قابلني فيه مشكلة مش فاهمها :
 كان بيعمل insert duplicated values في ال product_id نتيجة استخدام الjoin ف حليتها باستخدام row_number شلت الduplicates الاول
 ---------------------------------------------------------------------------------------------------
@@ -85,6 +67,14 @@ BEGIN
 	FROM CTE where total =1
 END
 
+--Dim_Shipping
+--------------------------------------------------------------------------------------------------------------------------------------
+CREATE PROCEDURE Load_To_Dim_Shipping as
+BEGIN
+	insert into [Supply_Chain_Datawarhouse].[dbo].[Dim_Shipping]
+	select Distinct [Shipping Mode], [delivery status]
+	FROM [sales_2017].[dbo].[Staging_Area_Combined_Data]
+END
 ```
 
 
