@@ -121,16 +121,12 @@ BEGIN
 	FROM [sales_2017].[dbo].[Staging_Area_Combined_Data] as STG
 	left JOIN [Supply_Chain_Datawarhouse].[dbo].[DIM_Orders] as ORD
 		 ON STG.[Order Id] = ORD.Order_ID
-
 	left JOIN [Supply_Chain_Datawarhouse].[dbo].[Dim_Customer] as CUS
 		 ON STG.[Customer Id] = CUS.Customer_id 
-
 	left JOIN [Supply_Chain_Datawarhouse].[dbo].[Dim_Shipping] as SHP
 		 ON STG.[Shipping Mode] = SHP.Shipping_Mode
-
 	left JOIN [Supply_Chain_Datawarhouse].[dbo].[Dim_Category] as CAT
 		 ON STG.[Category Id] = CAT.Category_ID
-
 	left JOIN [Supply_Chain_Datawarhouse].[dbo].[Dim_Payment] as PAY
 		 ON STG.PAYMENT = PAY.Payment
 END
