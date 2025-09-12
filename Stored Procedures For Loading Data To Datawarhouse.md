@@ -76,7 +76,8 @@ BEGIN
 	FROM [sales_2017].[dbo].[Staging_Area_Combined_Data]
 END
 
-
+--Fact_Order_Items
+--------------------------------------------------------------------------------------------------------------------------------------
 CREATE PROCEDURE  Load_To_Fact_Order_Items as 
 BEGIN
 	INSERT INTO [Supply_Chain_Datawarhouse].[dbo].[Fact_Order_Items]
@@ -85,6 +86,7 @@ BEGIN
 		Customer_ID,
 		Shipping_ID,
 		Category_ID,
+		Payment_ID,
 		Benefit_Per_Order,
 		[Days_For_Shipping_(Real)], 
 		[Days_For_Shipping_(Scheduled)],
@@ -96,28 +98,42 @@ BEGIN
 		Order_Item_Profit_Ratio,
 		Sales,
 		Order_Item_Total,
-		Order_Profit_Per_Order,
+		Order_Profit_Per_Order
 		)
-	SELECT 
+		SELECT 
 		ORD.Order_ID,
 		CUS.Customer_ID,
-		SHI.Shipping_ID,
+		SHP.Shipping_ID,
 		CAT.Category_ID,
-		STG.Benefit_Per_Order,
-		STG.[Days_For_Shipping_(Real)], 
-		STG.[Days_For_Shipping_(Scheduled)],
-		STG.Sales_Per_Customer,
-		STG.Late_Delivery_Risk,
-		STG.Order_Item_Discount,
-		STG.Order_Item_Discount_Rate,
-		STG.Order_Item_Product_Price,
-		STG.Order_Item_Profit_Ratio,
-		STG.Sales,
-		STG.Order_Item_Total,
-		STG.Order_Profit_Per_Order
+		PAY.Payment_ID,
+		STG.[Benefit Per Order],
+		STG.[Days For Shipping (Real)], 
+		STG.[Days for shipment (scheduled)],
+		STG.[Sales Per Customer],
+		STG.[Late Delivery Risk],
+		STG.[Order Item Discount],
+		STG.[Order Item Discount Rate],
+		STG.[Order Item Product Price],
+		STG.[Order Item Profit Ratio],
+		STG.[Sales],
+		STG.[Order Item Total],
+		STG.[Order Profit Per Order]
 	FROM [sales_2017].[dbo].[Staging_Area_Combined_Data] as STG
-	JOIN [Supply_Chain_Datawarhouse].[dbo].[DIM_Orders] as ORD
-		 ON STG.[Order id] = ORD.Order_ID
+	left JOIN [Supply_Chain_Datawarhouse].[dbo].[DIM_Orders] as ORD
+		 ON STG.[Order Id] = ORD.Order_ID
+
+	left JOIN [Supply_Chain_Datawarhouse].[dbo].[Dim_Customer] as CUS
+		 ON STG.[Customer Id] = CUS.Customer_id 
+
+	left JOIN [Supply_Chain_Datawarhouse].[dbo].[Dim_Shipping] as SHP
+		 ON STG.[Shipping Mode] = SHP.Shipping_Mode
+
+	left JOIN [Supply_Chain_Datawarhouse].[dbo].[Dim_Category] as CAT
+		 ON STG.[Category Id] = CAT.Category_ID
+
+	left JOIN [Supply_Chain_Datawarhouse].[dbo].[Dim_Payment] as PAY
+		 ON STG.PAYMENT = PAY.Payment
+END
 ```
 
 
