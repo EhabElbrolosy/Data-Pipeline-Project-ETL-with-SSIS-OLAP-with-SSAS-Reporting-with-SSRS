@@ -144,7 +144,9 @@ BEGIN
 		Order_Item_Profit_Ratio,
 		Sales,
 		Order_Item_Total,
-		Order_Profit_Per_Order
+		Order_Profit_Per_Order,
+		Order_Date_Key,
+		Shipping_Date_Key
 		)
 		SELECT 
 		ORD.Order_ID,
@@ -163,7 +165,10 @@ BEGIN
 		STG.[Order Item Profit Ratio],
 		STG.[Sales],
 		STG.[Order Item Total],
-		STG.[Order Profit Per Order]
+		STG.[Order Profit Per Order],
+		DAT1.Date_Key,
+		DAT2.Date_Key
+
 	FROM [sales_2017].[dbo].[Staging_Area_Combined_Data] as STG
 	left JOIN [Supply_Chain_Datawarhouse].[dbo].[DIM_Orders] as ORD
 		 ON STG.[Order Id] = ORD.Order_ID
@@ -175,6 +180,10 @@ BEGIN
 		 ON STG.[Category Id] = CAT.Category_ID
 	left JOIN [Supply_Chain_Datawarhouse].[dbo].[Dim_Payment] as PAY
 		 ON STG.PAYMENT = PAY.Payment
+	left join [Supply_Chain_Datawarhouse].[dbo].[Dim_Date] as DAT1
+		 ON cast(STG.[order date (DateOrders)] as date ) = DAT1.Full_Date
+	LEFT JOIN [Supply_Chain_Datawarhouse].[dbo].[Dim_Date] as DAT2
+		 ON  cast(STG.[shipping date (DateOrders)] as date ) = DAT2.Full_Date
 END
 ```
 
