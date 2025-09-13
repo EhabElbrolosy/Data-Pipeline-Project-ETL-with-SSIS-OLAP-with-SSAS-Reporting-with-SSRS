@@ -16,6 +16,22 @@ BEGIN
 	[Customer Zipcode] FROM [sales_2017].[dbo].[Staging_Area_Combined_Data]
 END
 
+--Dim_Orders
+--------------------------------------------------------------------------------------------------------------------------------------
+create procedure Load_To_Dim_Orders as 
+BEGIN
+	insert into [Supply_Chain_Datawarhouse].[dbo].[Dim_Orders]
+	select distinct	
+		[Order id],
+		[Order status],
+		[Order Country],
+		[Order City],
+		[Order Region],
+		[Order State]
+	FROM [sales_2017].[dbo].[Staging_Area_Combined_Data]
+END
+exec Load_To_Dim_Orders
+
 --Dim_Category
 --------------------------------------------------------------------------------------------------------------------------------------
 CREATE PROCEDURE Load_To_Dim_Category as
