@@ -92,6 +92,36 @@ BEGIN
 	FROM [sales_2017].[dbo].[Staging_Area_Combined_Data]
 END
 
+--Dim_Date
+--------------------------------------------------------------------------------------------------------------------------------------
+create procedure Load_To_Dim_Date as
+BEGIN
+;WITH Time_Range as (
+select 
+	MIN([order date (DateOrders)]) as [Start_Date],
+	MAX([shipping date (DateOrders)]) as End_Date
+FROM [sales_2017].[dbo].[Staging_Area_Combined_Data]
+UNION ALL
+SELECT dateadd(day,1,Start_Date), End_Date
+FROM Time_Range
+where Start_Date < End_Date)
+insert into [Supply_Chain_Datawarhouse].[dbo].[Dim_Date]
+(Date_Key,Full_Date,Year,Quarter,Month_Name,Day,Day_name,IsWeekend)
+
+SELECT
+	FORMAT(START_DATE,'yyyyMMdd') as Date_Key,
+	FORMAT(START_DATE,'yyyy-MM-dd') as Full_Date,
+	Datepart(year,START_DATE) as Year,
+	Datepart(quarter,START_DATE) as Quarter,
+	Datename(Month,START_DATE) as Month_Name,
+	Datepart(Day,Start_Date) as Day,
+	Datename(weekday,start_date) as Day_name,
+	case when datepart(weekday,start_date) in (7,1) then 'Yes' else 'No'
+	END as IsWeekend
+from Time_Range
+option	(maxrecursion 5000)
+END
+
 --Fact_Order_Items
 --------------------------------------------------------------------------------------------------------------------------------------
 CREATE PROCEDURE  Load_To_Fact_Order_Items as 
