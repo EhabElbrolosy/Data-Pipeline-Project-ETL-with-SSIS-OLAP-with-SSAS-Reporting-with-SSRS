@@ -4,7 +4,11 @@ Standarizing Data Types Among Different Data Sources Before Executing ```UNION A
 
 Calculating Discount rate ratio by deviding Discount amount by sales
 
-```(ISNULL([Order Item Discount Rate]) || TRIM([Order Item Discount Rate]) == "") ? (DT_NUMERIC,15,4)((Sales == 0) ? 0 : [Order Item Discount] / Sales) : (DT_NUMERIC,15,4)[Order Item Discount Rate]```
+```sql
+(ISNULL([Order Item Discount Rate]) || TRIM([Order Item Discount Rate]) == "")?
+(DT_NUMERIC,15,4)((Sales == 0) ? 0 : [Order Item Discount] / Sales)
+: (DT_NUMERIC,15,4)[Order Item Discount Rate]
+```
 
 ---
 Replacing Nulls in ```payment``` column With "Unknown"
