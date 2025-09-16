@@ -96,7 +96,7 @@ END
 --------------------------------------------------------------------------------------------------------------------------------------
 create procedure Load_To_Dim_Date as
 BEGIN
-;WITH Time_Range as (
+WITH Time_Range as (
 select 
 	MIN([order date (DateOrders)]) as [Start_Date],
 	MAX([shipping date (DateOrders)]) as End_Date
